@@ -5,9 +5,9 @@ from matplotlib.patches import FancyBboxPatch
 
 # Sample data
 row_labels = (
-    'ACES',
-    'DOUBLE FAULTS',
-    'FIRST SERVE',
+    'ZAGRANE MECZE',
+    'OBECNE WYGANE',
+    'OBECNE PZREGRANE',
     'WIN ON 1ST SERVE',
     'WIN ON 2ND SERVE',
     'NET POINTS WON',
@@ -22,8 +22,8 @@ row_count = np.arange(len(row_labels))
 ax1_name = "Iga Swiatek"
 ax1_data = [
     50,
-    50,
-    53,
+    30,
+    70,
     68,
     52,
     86,
@@ -34,9 +34,9 @@ ax1_data = [
     61
 ]
 ax1_txt = [
-    "1",
+    "10",
     "3",
-    "28/53 (53%)",
+    "7",
     "19/28 (68%)",
     "12/25 (52%)",
     "6/7 (86%)",
@@ -50,8 +50,8 @@ ax1_txt = [
 ax2_name = "Sofia Kenin"
 ax2_data = [
     50,
-    50,
-    69,
+    70,
+    30,
     46,
     24,
     29,
@@ -63,9 +63,9 @@ ax2_data = [
 ]
 
 ax2_txt = [
-    "1",
+    "10",
+    "7",
     "3",
-    "37/54 (69%)",
     "17/37 (46%)",
     "4/17 (24%)",
     "2/7 (29%)",
