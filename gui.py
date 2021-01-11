@@ -2,12 +2,7 @@ from PySide2.QtWidgets import (
     QApplication, QMainWindow, QListWidgetItem
 )
 from PySide2.QtGui import QPixmap
-import sys
 from ui_statistics import Ui_MainWindow
-from database import (
-    get_all_elements, get_indexes, get_second_players, get_tournaments
-)
-from plotter import get_plot
 
 
 class NegativeRange(Exception):
@@ -15,8 +10,10 @@ class NegativeRange(Exception):
 
 
 class PlayersWindow(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, database, plotter, parent=None):
         super().__init__(parent)
+        self.database = database
+        self.plotter = plotter
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.stack.setCurrentIndex(0)
@@ -25,7 +22,7 @@ class PlayersWindow(QMainWindow):
         self._setupLists()
 
     def _setupLists(self):
-        players = get_all_elements(['winner_name', 'loser_name'])
+        players = self.database.get_all_elements(['winner_name', 'loser_name'])
         self.player_1 = self._setupList(players, self.ui.player_1_list)
         self.ui.player_1_list.itemClicked.connect(self._selectPlayer1)
         self.ui.player_2_list.itemClicked.connect(self._selectPlayer2)
@@ -53,13 +50,13 @@ class PlayersWindow(QMainWindow):
         try:
             min_date, max_date = self.check_date()
             selected_values = {}
-            indexes = get_indexes()
+            indexes = self.database.get_indexes()
             value_item = self.ui.values.selectedItems()
             for value in value_item:
                 if value.name in indexes:
                     selected_values[value.name] = indexes[value.name]
 
-            image_data = get_plot(
+            image_data = self.plotter.get_plot(
                 self.player_1.name, self.player_2.name,
                 self.tourney.name, selected_values, self.only_best,
                 min_date, max_date)
@@ -75,7 +72,7 @@ class PlayersWindow(QMainWindow):
         self.ui.tournamnet_list.clear()
         self.ui.player_2_list.clear()
         self.ui.information.setText("Select Second Player")
-        player_2_list = get_second_players(self.player_1.name)
+        player_2_list = self.database.get_second_players(self.player_1.name)
         self.player_2 = self._setupList(player_2_list, self.ui.player_2_list)
         self._checkClicked()
 
@@ -84,7 +81,8 @@ class PlayersWindow(QMainWindow):
         self.player_2 = item
         self.ui.tournamnet_list.clear()
         self.ui.information.setText("Select Tournament")
-        tourney = get_tournaments(self.player_1.name, self.player_2.name)
+        tourney = self.database.get_tournaments(
+            self.player_1.name, self.player_2.name)
         self.tourney = self._setupList(tourney, self.ui.tournamnet_list)
         self._checkClicked()
 
@@ -96,7 +94,7 @@ class PlayersWindow(QMainWindow):
     def _checkClicked(self):
         if self.tourney_clicked:
             self.ui.stack.setCurrentIndex(1)
-            values = get_indexes()
+            values = self.database.get_indexes()
             self.ui.values.clear()
             for value in values:
                 value_item = QListWidgetItem(value)
@@ -114,12 +112,8 @@ class PlayersWindow(QMainWindow):
         return item
 
 
-def guiMain(args):
+def guiMain(args, database, plotter):
     app = QApplication(args)
-    window = PlayersWindow()
+    window = PlayersWindow(database, plotter)
     window.show()
     return app.exec_()
-
-
-if __name__ == "__main__":
-    guiMain(sys.argv)

@@ -1,7 +1,12 @@
+from gui import guiMain
 from database import Database
-import pandas as pd
+from plotter import Plotter
+import sys
 
-FILES = [
+
+db = Database()
+
+fiels = [
     'archive/atp_matches_2000.csv',
     'archive/atp_matches_2001.csv',
     'archive/atp_matches_2002.csv',
@@ -21,17 +26,8 @@ FILES = [
     'archive/atp_matches_2016.csv',
     'archive/atp_matches_2017.csv',
 ]
+db.from_csv(fiels)
 
+plt = Plotter(db)
 
-def test_get_surface_typical():
-    db = Database()
-    db.df = pd.DataFrame(
-        {"tourney_name": ['Wimbledon', 'Us Open', 'Kitzbuhel'],
-            "surface": ['INNA', 'Hard', 'Clay']})
-    assert db.get_surface('Wimbledon') == "INNA"
-
-
-def test_impot():
-    db = Database()
-    db.from_csv(FILES)
-    assert db.get_surface('Wimbledon') == "Grass"
+guiMain(sys.argv, database=db, plotter=plt)
