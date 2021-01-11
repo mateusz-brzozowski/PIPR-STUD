@@ -5,7 +5,7 @@ from PySide2.QtGui import QPixmap
 import sys
 from ui_statistics import Ui_MainWindow
 from database import (
-    getAllElements, getIndexes, getSecondPlayers, getTournaments
+    get_all_elements, get_indexes, get_second_players, get_tournaments
 )
 from plotter import get_plot
 
@@ -17,19 +17,28 @@ class PlayersWindow(QMainWindow):
         self.ui.setupUi(self)
         self.ui.stack.setCurrentIndex(0)
         self.tourney_clicked = False
+        self.only_best = False
         self._setupLists()
 
     def _setupLists(self):
-        players = getAllElements(['winner_name', 'loser_name'])
+        players = get_all_elements(['winner_name', 'loser_name'])
         self.player_1 = self._setupList(players, self.ui.player_1_list)
         self.ui.player_1_list.itemClicked.connect(self._selectPlayer1)
         self.ui.player_2_list.itemClicked.connect(self._selectPlayer2)
         self.ui.tournamnet_list.itemClicked.connect(self._selectTourney)
+        self.ui.only_best.toggled.connect(self.onClicked)
         self.ui.generate_plot.clicked.connect(self._generatePlot)
+
+    def onClicked(self):
+        radio_button = self.sender()
+        if radio_button.isChecked():
+            self.only_best = True
+        else:
+            self.only_best = False
 
     def _generatePlot(self, item):
         selected_values = {}
-        indexes = getIndexes()
+        indexes = get_indexes()
         value_item = self.ui.values.selectedItems()
         for value in value_item:
             if value.name in indexes:
@@ -37,7 +46,7 @@ class PlayersWindow(QMainWindow):
 
         image_data = get_plot(
             self.player_1.name, self.player_2.name,
-            self.tourney.name, selected_values)
+            self.tourney.name, selected_values, self.only_best)
         pixmap = QPixmap()
         if pixmap.loadFromData(image_data):
             self.ui.plot.setPixmap(pixmap)
@@ -48,7 +57,7 @@ class PlayersWindow(QMainWindow):
         self.ui.tournamnet_list.clear()
         self.ui.player_2_list.clear()
         self.ui.information.setText("Select Second Player")
-        player_2_list = getSecondPlayers(self.player_1.name)
+        player_2_list = get_second_players(self.player_1.name)
         self.player_2 = self._setupList(player_2_list, self.ui.player_2_list)
         self._checkClicked()
 
@@ -57,7 +66,7 @@ class PlayersWindow(QMainWindow):
         self.player_2 = item
         self.ui.tournamnet_list.clear()
         self.ui.information.setText("Select Tournament")
-        tourney = getTournaments(self.player_1.name, self.player_2.name)
+        tourney = get_tournaments(self.player_1.name, self.player_2.name)
         self.tourney = self._setupList(tourney, self.ui.tournamnet_list)
         self._checkClicked()
 
@@ -69,7 +78,7 @@ class PlayersWindow(QMainWindow):
     def _checkClicked(self):
         if self.tourney_clicked:
             self.ui.stack.setCurrentIndex(1)
-            values = getIndexes()
+            values = get_indexes()
             self.ui.values.clear()
             for value in values:
                 value_item = QListWidgetItem(value)
