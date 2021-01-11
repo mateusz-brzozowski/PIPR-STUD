@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 # %matplotlib inline
 plt.style.use('fivethirtyeight')
 
-import os
-for dirname, _, filenames in os.walk('archive'):
-        for filename in filenames:
-            print(os.path.join(dirname, filename))
+# import os
+# for dirname, _, filenames in os.walk('archive'):
+#         for filename in filenames:
+#             print(os.path.join(dirname, filename))
 
 cols = [
     'tourney_id', # Id of Tournament
@@ -84,61 +84,9 @@ df = pd.concat([
 
 df.tail()
 
-roger = df.loc[(df['winner_name'] == 'Antony Dupuis') | (df['loser_name'] == 'Antony Dupuis')].copy()
-#we want to analyze his performance over time but date is not float 64, so let's change it to datettime datatype.
-roger.tourney_date.apply(lambda x: '%.0f' % round(x,0))
+min_date = "2005318"
+max_date = "2012318"
 
-roger.loc[:,'tourney_date'] = pd.to_datetime(roger['tourney_date'], format='%Y%m%d')
-# Let's look at his serve performance over the time. However, we have to look at the number of serve whether it is winner or loser based on loser or winner
-# how important is the serve
-# let's define variable that we will use a lot
-rogerwin = roger.loc[roger['winner_name'] == 'Antony Dupuis'].copy()
-rogerloss = roger.loc[roger['loser_name'] == 'Antony Dupuis'].copy()
-# print(f'Number of wins: {rogerwin.count()[0]}')
-# print(f'Number of losses: {rogerloss.count()[0]}')
-
-    #let's plot the number of wins and losses from 2000 to
-fig = plt.figure(figsize=(5,5))
-import matplotlib as mpl
-
-plt.title("No. of Roger's Wins and Losses throughout his careers")
-plt.pie([rogerwin.count()[0],rogerloss.count()[0]],labels = [f'{rogerwin.count()[0]} matches won',f'{rogerloss.count()[0]} matches lost'],textprops={'fontsize': 20})
-plt.show()
-
-
-tour = rogerwin.loc[rogerwin.tourney_level == 'G'].groupby(rogerwin.tourney_id).count()
-championship = tour.loc[tour.tourney_id == 7]
-plt.title('No. of Grandslam Championships')
-plt.yticks([1,2,3])
-grandslams = championship.groupby(championship.index.map(lambda x: x[0:4])).count()
-plt.bar(grandslams.index,grandslams.tourney_id)
-
-plt.show()
-#  -----------------------------------------------------------------------------------
-loss = roger.loc[roger.winner_name != 'Roger Federer', ['winner_name']]
-# loss.rename(r={'winner_name': 'name'})
-loss.columns = ['name']
-loss['status'] = 'loss'
-win = roger.loc[roger.winner_name == 'Roger Federer', ['loser_name']]
-win.columns = ['name']
-win['status'] = 'win'
-opponents = pd.concat([win,loss])
-# opponents
-opponents.groupby('name').count().sort_values('status', ascending = False)
-
-opponents_grouped = pd.DataFrame()
-opponents_grouped['No. of matches'] = numberofmatches.status
-opponents_grouped['No. of winning'] = opponents.loc[opponents.status=='win'].groupby('name').count().status
-opponents_grouped['percentage'] = opponents_grouped['No. of winning']/opponents_grouped['No. of matches']
-opponents_grouped.loc[opponents_grouped['No. of matches'] > 10].sort_values('percentage',ascending = True).head()
-
-opponents.loc[opponents.status=='win'].groupby('name').count()
-plt.xlabel('opponent name')
-plt.ylabel("Percentage of Roger's winning")
-plt.xticks(rotation='vertical')
-# plt.bar(opponents_grouped.sort_values('percentage',ascending = True).index[0:10], opponents_grouped.sort_values('percentage',ascending = True).percentage[0:10])
-
-plt.bar(opponents_grouped.loc[opponents_grouped['No. of matches'] > 10].sort_values('percentage',ascending = True).index[0:10], opponents_grouped.sort_values('percentage',ascending = True).percentage[0:10])
-plt.title("Roger's Strongest Opponents")
-
-plt.show()
+date_df = df.loc[
+    (df['tourney_date'].astype(str) >= min_date) &
+    (df['tourney_date'].astype(str) <= max_date)].copy()

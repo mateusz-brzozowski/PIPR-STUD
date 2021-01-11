@@ -90,6 +90,14 @@ values = {
     "No. break points saved": ['w_bpSaved', 'l_bpSaved', 'local'],
     "No. break points faced": ['w_bpFaced', 'l_bpFaced', 'local'],
     "Total no. W/L": ['winner_name', 'loser_name', 'general'],
+    "W/L on ATP Tour":
+        ['winner_name', 'loser_name', 'general', 'tourney_level', 'A'],
+    "W/L on Davis Cup":
+        ['winner_name', 'loser_name', 'general', 'tourney_level', 'D'],
+    "W/L on Grand Slam":
+        ['winner_name', 'loser_name', 'general', 'tourney_level', 'G'],
+    "W/L on Masters":
+        ['winner_name', 'loser_name', 'general', 'tourney_level', 'M'],
     "W/L on Hard surface":
         ['winner_name', 'loser_name', 'general', 'surface', 'Hard'],
     "W/L on Clay surface":
@@ -143,9 +151,18 @@ def get_indexes():
     return values
 
 
-def getDataFrame(player1, player2, tourney_name):
-    player1_df = df.loc[
-        (df['winner_name'] == player1) | (df['loser_name'] == player1)].copy()
+def get_data_frame_with_date(min_date, max_date):
+    date_df = df.loc[
+        (df['tourney_date'].astype(str) >= min_date) &
+        (df['tourney_date'].astype(str) <= max_date)].copy()
+    return date_df
+
+
+def getDataFrame(player1, player2, tourney_name, min_date, max_date):
+    date_df = get_data_frame_with_date(min_date, max_date)
+    player1_df = date_df.loc[
+        (date_df['winner_name'] == player1) |
+        (date_df['loser_name'] == player1)].copy()
     player2_df = player1_df.loc[
         (player1_df['winner_name'] == player2) |
         (player1_df['loser_name'] == player2)].copy()
@@ -153,11 +170,14 @@ def getDataFrame(player1, player2, tourney_name):
     return data_frame
 
 
-def get_winratio_columns(player1, player2, tourney_name, columns):
+def get_winratio_columns(
+    player1, player2, tourney_name, columns, min_date, max_date
+):
     if columns[2] == "local":
-        data_frame = getDataFrame(player1, player2, tourney_name)
+        data_frame = getDataFrame(
+            player1, player2, tourney_name, min_date, max_date)
     else:
-        data_frame = df.copy()
+        data_frame = get_data_frame_with_date(min_date, max_date)
     if len(columns) > 4:
         data_frame = data_frame.loc[
             data_frame[columns[3]] == columns[4]].copy()
@@ -172,11 +192,14 @@ def get_winratio_columns(player1, player2, tourney_name, columns):
     return player1_wins, player1_losses, player2_wins, player2_losses
 
 
-def get_sum_in_columns(player1, player2, tourney_name, columns):
+def get_sum_in_columns(
+    player1, player2, tourney_name, columns, min_date, max_date
+):
     if columns[2] == "local":
-        data_frame = getDataFrame(player1, player2, tourney_name)
+        data_frame = getDataFrame(
+            player1, player2, tourney_name, min_date, max_date)
     else:
-        data_frame = df.copy()
+        data_frame = get_data_frame_with_date(min_date, max_date)
     player1_data = data_frame.loc[
         data_frame['winner_name'] == player1].sum()[columns[0]]
     player1_data += data_frame.loc[
@@ -194,11 +217,14 @@ def check_nan(value):
     return value
 
 
-def get_best_in_columns(player1, player2, tourney_name, columns):
+def get_best_in_columns(
+    player1, player2, tourney_name, columns, min_date, max_date
+):
     if columns[2] == "local":
-        data_frame = getDataFrame(player1, player2, tourney_name)
+        data_frame = getDataFrame(
+            player1, player2, tourney_name, min_date, max_date)
     else:
-        data_frame = df.copy()
+        data_frame = get_data_frame_with_date(min_date, max_date)
     player1_winner = data_frame.loc[
         data_frame['winner_name'] == player1][columns[0]].max()
     player1_winner = check_nan(player1_winner)
@@ -225,7 +251,9 @@ def get_surface(tourney_name):
 
 
 if __name__ == "__main__":
-    get_sum_in_columns("Nicolas Mahut", "John Isner", "Wimbledon", ['winner_ht', 'loser_ht', 'local'])
+    get_sum_in_columns(
+        "Nicolas Mahut", "John Isner", "Wimbledon",
+        ['winner_ht', 'loser_ht', 'local'])
     df = getDataFrame("Novak Djokovic", "Juan Martin Del Potro", "US Open")
     print(df)
     pass

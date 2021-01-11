@@ -110,7 +110,143 @@
        </widget>
        <widget class="QWidget" name="page_2">
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="5" column="0">
+         <item row="4" column="0" colspan="3">
+          <widget class="QPushButton" name="generate_plot">
+           <property name="text">
+            <string>Generate a chart</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="3">
+          <widget class="QListWidget" name="values">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::MultiSelection</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" rowspan="2">
+          <widget class="QRadioButton" name="only_best">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>The Best Values</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="min_data_text">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string/>
+           </property>
+           <property name="text">
+            <string>Minimum Date</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QDateEdit" name="max_date_select">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="dateTime">
+            <datetime>
+             <hour>0</hour>
+             <minute>0</minute>
+             <second>0</second>
+             <year>2017</year>
+             <month>12</month>
+             <day>30</day>
+            </datetime>
+           </property>
+           <property name="maximumDateTime">
+            <datetime>
+             <hour>23</hour>
+             <minute>59</minute>
+             <second>59</second>
+             <year>2017</year>
+             <month>12</month>
+             <day>31</day>
+            </datetime>
+           </property>
+           <property name="minimumDateTime">
+            <datetime>
+             <hour>0</hour>
+             <minute>0</minute>
+             <second>0</second>
+             <year>2000</year>
+             <month>1</month>
+             <day>1</day>
+            </datetime>
+           </property>
+           <property name="currentSection">
+            <enum>QDateTimeEdit::YearSection</enum>
+           </property>
+           <property name="displayFormat">
+            <string>yyyy</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="3">
+          <widget class="QLabel" name="information_2">
+           <property name="text">
+            <string>Select the values you want to compare</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="max_data_text">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Maximum Date</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="3">
           <widget class="QLabel" name="plot">
            <property name="text">
             <string/>
@@ -126,13 +262,16 @@
          <item row="3" column="1">
           <widget class="QDateEdit" name="min_date_select">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="toolTip">
             <string/>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -180,139 +319,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="2" column="0" rowspan="2">
-          <widget class="QRadioButton" name="only_best">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>The Best Values</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="min_data_text">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string/>
-           </property>
-           <property name="text">
-            <string>Minimum Date</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="max_data_text">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Maximum Date</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="3">
-          <widget class="QListWidget" name="values">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="editTriggers">
-            <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::MultiSelection</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="3">
-          <widget class="QPushButton" name="generate_plot">
-           <property name="text">
-            <string>Generate a chart</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" colspan="3">
-          <widget class="QLabel" name="information_2">
-           <property name="text">
-            <string>Select the values you want to compare</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QDateEdit" name="max_date_select">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="dateTime">
-            <datetime>
-             <hour>0</hour>
-             <minute>0</minute>
-             <second>0</second>
-             <year>2000</year>
-             <month>9</month>
-             <day>14</day>
-            </datetime>
-           </property>
-           <property name="maximumDateTime">
-            <datetime>
-             <hour>23</hour>
-             <minute>59</minute>
-             <second>59</second>
-             <year>2017</year>
-             <month>12</month>
-             <day>31</day>
-            </datetime>
-           </property>
-           <property name="minimumDateTime">
-            <datetime>
-             <hour>0</hour>
-             <minute>0</minute>
-             <second>0</second>
-             <year>2000</year>
-             <month>1</month>
-             <day>1</day>
-            </datetime>
-           </property>
-           <property name="currentSection">
-            <enum>QDateTimeEdit::YearSection</enum>
-           </property>
-           <property name="displayFormat">
-            <string>yyyy</string>
-           </property>
-           <property name="calendarPopup">
-            <bool>false</bool>
-           </property>
-          </widget>
          </item>
         </layout>
        </widget>

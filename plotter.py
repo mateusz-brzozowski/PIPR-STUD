@@ -37,14 +37,17 @@ def get_description(player_wins, player_losses):
     return f"{player_wins}/{player_losses} ({int(ratio)}%)", ratio
 
 
-def get_data(player1, player2, tourney_name, columns, best):
+def get_data(
+    player1, player2, tourney_name, columns, best, min_date, max_date
+):
     ax1_txt = []
     ax2_txt = []
     ax1_data = []
     ax2_data = []
     for column in columns.values():
         if column[0] == "winner_name":
-            data = get_winratio_columns(player1, player2, tourney_name, column)
+            data = get_winratio_columns(
+                player1, player2, tourney_name, column, min_date, max_date)
             player1_desc, player1_rato = get_description(
                 data[0], data[1])
             player2_desc, player2_rato = get_description(
@@ -54,12 +57,12 @@ def get_data(player1, player2, tourney_name, columns, best):
             ax1_data.append(player1_rato)
             ax2_data.append(player2_rato)
         else:
-            if best:
+            if best or column[0] == "winner_ht":
                 data = get_best_in_columns(
-                    player1, player2, tourney_name, column)
+                    player1, player2, tourney_name, column, min_date, max_date)
             else:
                 data = get_sum_in_columns(
-                    player1, player2, tourney_name, column)
+                    player1, player2, tourney_name, column, min_date, max_date)
             player1_desc, player1_rato = get_description(
                 data[0], data[1])
             player2_desc, player2_rato = get_description(
@@ -71,11 +74,13 @@ def get_data(player1, player2, tourney_name, columns, best):
     return ax1_txt, ax1_data, ax2_txt, ax2_data
 
 
-def get_plot(player1, player2, tourney_name, columns, best):
+def get_plot(
+    player1, player2, tourney_name, columns, best, min_date, max_date
+):
     row_labels = columns
     row_count = np.arange(len(row_labels))
     ax1_txt, ax1_data, ax2_txt, ax2_data = get_data(
-        player1, player2, tourney_name, columns, best)
+        player1, player2, tourney_name, columns, best, min_date, max_date)
     ax1_name = player1
     ax2_name = player2
     ax3_name = tourney_name
@@ -139,4 +144,6 @@ def get_plot(player1, player2, tourney_name, columns, best):
 
 
 if __name__ == "__main__":
-    get_plot("Novak Djokovic", "Juan Martin Del Potro", "Us Open", {"Number of wins in ther": ['w_ace', 'l_ace']})
+    get_plot(
+        "Novak Djokovic", "Juan Martin Del Potro", "Us Open",
+        {"Number of wins in ther": ['w_ace', 'l_ace']})

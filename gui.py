@@ -10,6 +10,10 @@ from database import (
 from plotter import get_plot
 
 
+class NegativeRange(Exception):
+    pass
+
+
 class PlayersWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -36,20 +40,34 @@ class PlayersWindow(QMainWindow):
         else:
             self.only_best = False
 
-    def _generatePlot(self, item):
-        selected_values = {}
-        indexes = get_indexes()
-        value_item = self.ui.values.selectedItems()
-        for value in value_item:
-            if value.name in indexes:
-                selected_values[value.name] = indexes[value.name]
+    def check_date(self):
+        min_date = self.ui.min_date_select
+        max_date = self.ui.max_date_select
+        if min_date.date() > max_date.date():
+            raise NegativeRange()
+        min_date = min_date.date().toString("yyyyMMdd")
+        max_date = max_date.date().toString("yyyyMMdd")
+        return min_date, max_date
 
-        image_data = get_plot(
-            self.player_1.name, self.player_2.name,
-            self.tourney.name, selected_values, self.only_best)
-        pixmap = QPixmap()
-        if pixmap.loadFromData(image_data):
-            self.ui.plot.setPixmap(pixmap)
+    def _generatePlot(self, item):
+        try:
+            min_date, max_date = self.check_date()
+            selected_values = {}
+            indexes = get_indexes()
+            value_item = self.ui.values.selectedItems()
+            for value in value_item:
+                if value.name in indexes:
+                    selected_values[value.name] = indexes[value.name]
+
+            image_data = get_plot(
+                self.player_1.name, self.player_2.name,
+                self.tourney.name, selected_values, self.only_best,
+                min_date, max_date)
+            pixmap = QPixmap()
+            if pixmap.loadFromData(image_data):
+                self.ui.plot.setPixmap(pixmap)
+        except NegativeRange:
+            self.ui.plot.setText("The date range selected cannot be negative")
 
     def _selectPlayer1(self, item):
         self.tourney_clicked = False
