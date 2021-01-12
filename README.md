@@ -35,4 +35,4 @@ Sposób korzystania z programu
 
 Biblioteki
 ------------
-pandas, numpy, matplotlib, PySide2, io, sys
+`pandas, numpy, matplotlib, PySide2, io, sys`
