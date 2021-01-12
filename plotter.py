@@ -4,11 +4,24 @@ from matplotlib.patches import FancyBboxPatch
 from io import BytesIO
 
 
+class MissingDataError(Exception):
+    pass
+
+
 class Plotter:
+    """
+    Class plotter contains functions responsible for creating a plot
+    the entrance you have to specify database
+    """
     def __init__(self, database):
+        """Initializes a Plotter"""
         self.database = database
 
     def round_bars(self, ax):
+        """
+        the function changes a simple rectangular shape into
+        one with rounded corners
+        """
         new_patches = []
         for patch in reversed(ax.patches):
             if patch.get_width() != 0:
@@ -29,8 +42,15 @@ class Plotter:
         return ax
 
     def get_description(self, player_wins, player_losses):
-        player_wins = int(player_wins)
-        player_losses = int(player_losses)
+        """
+        the function returns a string containing
+        the comparison of two variables and their percentages
+        """
+        try:
+            player_wins = int(player_wins)
+            player_losses = int(player_losses)
+        except ValueError:
+            raise MissingDataError
         if player_wins == 0 and player_losses == 0:
             return "Lack of data", 0
         ratio = round((player_wins/(player_wins + player_losses))*100, 2)
@@ -39,6 +59,10 @@ class Plotter:
     def get_data(
         self, player1, player2, tourney_name, columns, best, min_date, max_date
     ):
+        """
+        the function retrieves data from the database,
+            returns arrays containing data to create a chart
+        """
         ax1_txt = []
         ax2_txt = []
         ax1_data = []
@@ -77,6 +101,10 @@ class Plotter:
     def get_plot(
         self, player1, player2, tourney_name, columns, best, min_date, max_date
     ):
+        """
+        on the basis of given variables,
+        the function generates a graph and returns its image
+        """
         row_labels = columns
         row_count = np.arange(len(row_labels))
         ax1_txt, ax1_data, ax2_txt, ax2_data = self.get_data(

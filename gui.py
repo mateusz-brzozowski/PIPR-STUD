@@ -37,7 +37,7 @@ class PlayersWindow(QMainWindow):
         else:
             self.only_best = False
 
-    def check_date(self):
+    def checkDate(self):
         min_date = self.ui.min_date_select
         max_date = self.ui.max_date_select
         if min_date.date() > max_date.date():
@@ -48,7 +48,7 @@ class PlayersWindow(QMainWindow):
 
     def _generatePlot(self, item):
         try:
-            min_date, max_date = self.check_date()
+            min_date, max_date = self.checkDate()
             selected_values = {}
             indexes = self.database.get_indexes()
             value_item = self.ui.values.selectedItems()
