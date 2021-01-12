@@ -20,7 +20,7 @@ Schemat Kodu
 Dokumentacja
 ------------
 
-Dostępna na <https://gitlab-stud.elka.pw.edu.pl/mbrzozow/slam-tracker/-/blob/master/docs/Slam%20tracker.docx>.
+Link: <https://gitlab-stud.elka.pw.edu.pl/mbrzozow/slam-tracker/-/blob/master/docs/Slam%20tracker.docx>.
 
 Sposób korzystania z programu
 ------------
