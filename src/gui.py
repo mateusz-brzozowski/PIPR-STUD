@@ -10,7 +10,14 @@ class NegativeRange(Exception):
 
 
 class PlayersWindow(QMainWindow):
+    """
+    PlayersWindow class is responsible
+    for presenting the user a graphical interface,
+    retrieving the necessary values and parameters from him
+    to display the graph to the user.
+    """
     def __init__(self, database, plotter, parent=None):
+        """Initializes a PlayersWindow"""
         super().__init__(parent)
         self.database = database
         self.plotter = plotter
@@ -22,6 +29,10 @@ class PlayersWindow(QMainWindow):
         self._setupLists()
 
     def _setupLists(self):
+        """
+        the function sets the lists and checks
+        if the user has selected any item
+        """
         players = self.database.get_all_elements(['winner_name', 'loser_name'])
         self.player_1 = self._setupList(players, self.ui.player_1_list)
         self.ui.player_1_list.itemClicked.connect(self._selectPlayer1)
@@ -31,6 +42,7 @@ class PlayersWindow(QMainWindow):
         self.ui.generate_plot.clicked.connect(self._generatePlot)
 
     def onClicked(self):
+        """The function checks the logical value of the toggle"""
         radio_button = self.sender()
         if radio_button.isChecked():
             self.only_best = True
@@ -38,6 +50,7 @@ class PlayersWindow(QMainWindow):
             self.only_best = False
 
     def checkDate(self):
+        """Returns a date range, if valid"""
         min_date = self.ui.min_date_select
         max_date = self.ui.max_date_select
         if min_date.date() > max_date.date():
@@ -47,6 +60,7 @@ class PlayersWindow(QMainWindow):
         return min_date, max_date
 
     def _generatePlot(self, item):
+        """The function checks the conditions and displays the graph"""
         try:
             min_date, max_date = self.checkDate()
             selected_values = {}
@@ -67,6 +81,10 @@ class PlayersWindow(QMainWindow):
             self.ui.plot.setText("The date range selected cannot be negative")
 
     def _selectPlayer1(self, item):
+        """
+        The function takes the first selected item
+        and generates a second list of items
+        """
         self.tourney_clicked = False
         self.player_1 = item
         self.ui.tournamnet_list.clear()
@@ -77,6 +95,10 @@ class PlayersWindow(QMainWindow):
         self._checkClicked()
 
     def _selectPlayer2(self, item):
+        """
+        The function takes the second selected item
+        and generates a third list of items
+        """
         self.tourney_clicked = False
         self.player_2 = item
         self.ui.tournamnet_list.clear()
@@ -87,11 +109,13 @@ class PlayersWindow(QMainWindow):
         self._checkClicked()
 
     def _selectTourney(self, item):
+        """The function takes the third element"""
         self.tourney_clicked = True
         self.tourney = item
         self._checkClicked()
 
     def _checkClicked(self):
+        """The function checks if three elements have been selected"""
         if self.tourney_clicked:
             self.ui.stack.setCurrentIndex(1)
             values = self.database.get_indexes()
@@ -105,6 +129,7 @@ class PlayersWindow(QMainWindow):
             self.ui.plot.clear()
 
     def _setupList(self, elements, widget_list):
+        """function adds items to the list"""
         for element in elements:
             item = QListWidgetItem(element)
             item.name = element
@@ -113,6 +138,7 @@ class PlayersWindow(QMainWindow):
 
 
 def guiMain(args, database, plotter):
+    """Main function that makes up the Player Window class"""
     app = QApplication(args)
     window = PlayersWindow(database, plotter)
     window.show()

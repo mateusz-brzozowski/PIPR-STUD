@@ -61,7 +61,7 @@ class Plotter:
     ):
         """
         the function retrieves data from the database,
-            returns arrays containing data to create a chart
+        returns arrays containing data to create a chart
         """
         ax1_txt = []
         ax2_txt = []

@@ -1,0 +1,64 @@
+Slam tracker
+
+Program za pomocą wykresu przedstawia przedmeczowe statystyki zawodników tenisowych.
+
+
+Sposób korzystania z programu:
+1.Wybierz pierwszego zawodnika
+2.Wybierz drugiego zawodnika
+3.Wybierz turniej
+4.Wybierz parametry, które chcesz przedstawić na wykresie
+5.Opcjonalnie zaznacz „Najlepsze rekordy”
+6.Opcjonalnie wybierz zakres dat
+7.Naciśnij „Wygeneruj wykres”
+8.Na ekranie powinien ukazać się wykres danych
+
+Ad.1 Lista zawodników tworzy się na podstawie bazy danych, funkcja przeszukuje całą kolumnę z zawodnikami i wybiera unikalne rekordy.
+
+Ad.2 Lista z drugimi zawodnikami, tworzy się na podstawie uprzednio wybranego zawodnika, funkcja przeszukuję wiersze, w których występuje pierwszy zawodnik i wybiera unikalne osoby, z którymi on rywalizował.
+
+Ad.3 Lista turniejów tworzona jest na podstawie pierwszego i drugiego zawodnika, funkcja przeszukuje wiersze, w których pierwszy i drugi zawodnik razem ze sobą rywalizowali i wybiera unikalne turnieje, na których obaj zawodnicy walczyli ze sobą.
+
+Ad.4 Parametry, które użytkownik może wybrać, aby pojawiły się na wykresie, dzielą się na dwie grupy:
+-pierwsza porównująca bezpośrednio rywalizację między zawodnikami na podanym turnieju, czyli konkretnych statystyk zdobytych w rywalizacji między zawodnikami na tym turnieju, wzrost oraz bilans starć między zawodnikami:
+Wins to losses between players, Height in cm, Number of aces, Number of double faults, Number of service points, Number of first serves in, Number of first serve points won, Number of second serve points won, Number of service games played, Number of break points saved, Number of break points faced.
+-druga porównująca dokonania zawodników na wszystkich zawodach, ze wszystkimi przeciwnikami, czyli konkretne statystyki meczowe, dodatkowo stosunek wygranych do przegranych na różnych nawierzchniach, poziomach turniejowych i ogólny bilans:
+Total number of wins to losses, Wins to losses on ATP Tour, Wins to losses on Davis Cup, Wins to losses on Grand Slam, Wins to losses on Masters, Wins to losses on Hard surface, Wins to losses on Clay surface, Wins to losses on Grass surface, Total number of aces, Total number of double faults, Total number of service points, Total number of first serves in, Total number of first serve points won, Total number of second serve points won, Total number of service games played, Total number of break points saved, Total number of break points faced.
+
+Ad.5 Opcja „The Best Values”, pozwala na ograniczeniu wyświetlanych wyników, tylko do najlepszych rekordów, ale opcja ta dotyczy tylko statystyk meczowych, na przykład możemy porównać ile zawodnik miał najwięcej asów serwisowych w jednym meczu.
+
+Ad.6 Opcja wybrania minimalnej i maksymalnej daty, pozwala na porównanie tylko tych danych, w których turnieje odbywały się w podanym przedziale czasu, dodatkowo minimalna data, nie może być większa, niż maksymalna , na przykład możemy sprawdzić, jak radził sobie zawodnik w roku 2008 , wybierając minimalną i maksymalną datę równą 2008.
+
+Ad.7 Na podstawie podanych parametrów i poprawnym zakresie dat, zostanie wygenerowane zestawienie zawodników tenisowych.
+
+Ad.8 Na wykresie, po lewej stornie pojawią się statystyki pierwszego zawodnika, po środku parametry, które wybraliśmy, a po prawo statystyki drugiego zawodnika. Dane są podane w dwóch wariantach, jeżeli jest to stosunek wygranych do przegranych to zostaje przestawiony w formacie:
+wygrane/przegranych (procentowa skuteczność%)
+w innych przypadkach zostaje pokazany w następujący sposób:
+wartość zawodnika/ wartość przeciwnika (stosunek procentowy%)
+
+
+Aspekty techniczne programu:
+
+Biblioteki:
+pandas, numpy, matplotlib, PySide2, io, sys
+
+Projekt podzieliłem na trzy moduły:
+1.gui, moduł odpowiedzialny za przedstawienie użytkownikowi graficznego interfejsu i pobierania od niego potrzebnych wartości i parametrów, tak aby wyświetlić użytkownikowi wykres.
+2.plotter, moduł odpowiedzialny za generowanie wykresu, na podstawie wybranych parametrów.
+3.database, moduł odpowiedzialny pobieranie danych z pliku csv,  a także przechowywanie danych, operowanie na nich i zwracaniu ich innym modułom.
+
+Ad.2
+Funkcja get_plot()
+na podstawie podanych parametrów i wartości znajdujących się w bazie danych, pobieranych przez funkcję get_data(), dodatkowo tworzony jest opis każdego słupka w funkcji get_description()
+tworzy wykres składający się z trzech pod-wykresów, dwa, na których wyświetlają się słupki z danymi i środkowy, na którym wyświetlają się nazwy wybranych parametrów. Każdy słupek składa się z dwóch słupków, jednego będącego tłem i drugiego wyświetlającego wartość parametru w zakresie od 0% do 100 %, każdy ze słupków jest zaokrąglany za pomocą funkcji round_bars() i na koniec zostaje stworzony obraz wykresu i zwraca plik.
+
+Ad.3
+Funkcje:
+get_best_in_columns() – wyszukuje najwyższą wartość w kolumnie
+get_sum_in_columns() – sumuje wartości w kolumnach
+get_winratio_columns() – zlicza Ilość wystąpień warunku w wierszach
+get_data_frame() get_data_frame_with_date() – ograniczają ilość danych tylko do tych gdzie znajdują się zawodnicy lub na podstawie zakresu dat
+get_second_players() get_tournaments() get_all_elements() get_indexes() – zwracają listę z zawodnikami,  turniejami lub parametrami
+from_csv() – czyta dane z pliku csv
+check_player() check_nan() – sprawdza poprawność danych
+get_surface() – zwraca powierzchnie turnieju
